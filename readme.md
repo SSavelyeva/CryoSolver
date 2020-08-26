@@ -1,5 +1,4 @@
-# CryoSolver 
-# Package for cryogenic cycle simulation in Python
+# CryoSolver. Package for cryogenic cycle simulation in Python
 # Readme Ver. 1.0.0
 
 ## Introduction
