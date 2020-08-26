@@ -304,6 +304,6 @@ This package was developed at the TU Dresden within the Work Package 4 of the EA
 
 ## References
 
-[1]: Lemmon, E.W., Bell, I.H., Huber, M.L., McLinden, M.O. NIST Standard Reference Database 23: Reference Fluid Thermodynamic and Transport Properties-REFPROP, Version 10.0, National Institute of Standards and Technology, Standard Reference Data Program, Gaithersburg, 2018. <http://dx.doi.org/10.18434/T4JS3C>
+1. Lemmon, E.W., Bell, I.H., Huber, M.L., McLinden, M.O. NIST Standard Reference Database 23: Reference Fluid Thermodynamic and Transport Properties-REFPROP, Version 10.0, National Institute of Standards and Technology, Standard Reference Data Program, Gaithersburg, 2018. <http://dx.doi.org/10.18434/T4JS3C>
 
-[2]: Savelyeva, S., Kloeppel, S, Haberstroh, Ch. CryoSolver. Package for cryogenic cycle simulation in Python. Documentation Ver. 1.0.0. Dresden, 2018. <https://doi.org/10.5281/zenodo.4001668> 
+2. Savelyeva, S., Kloeppel, S, Haberstroh, Ch. CryoSolver. Package for cryogenic cycle simulation in Python. Documentation Ver. 1.0.0. Dresden, 2018. <https://doi.org/10.5281/zenodo.4001668> 
