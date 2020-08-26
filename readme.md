@@ -40,7 +40,7 @@ sys.path.append("Path/to/CryoSolver-1.0.0/")
 
 ### Global installation:
 
-Before the global installation please execute any example file from the [examples folder]("/examples/") and make sure that the program works properly. In case of errors with Refprop please refer to <https://www.nist.gov/srd/refprop> and modify the _refpropfunc.py_. In case of installation on OSX or Linux some changes in the Refprop setup can be required.
+Before the global installation please execute any example file from the "/CryoSolver-1.0.0/examples/" folder and make sure that the program works properly. In case of errors with Refprop please refer to <https://www.nist.gov/srd/refprop> and modify the _refpropfunc.py_. In case of installation on OSX or Linux some changes in the Refprop setup can be required.
 
 The installation can be made from the terminal using the package installer for Python ([pip](https://pip.pypa.io/en/stable/)): 
 
