@@ -18,9 +18,10 @@ setuptools.setup(
     author="Sofiya Savelyeva, Steffen Klöppel",
     author_email="sofiya.savelyeva@tu-dresden.de, steffen.kloeppel@tu-dresden.de",
     description="Package for cryogenic cycle simulation",
-	long_description=long_description,
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/SSavelyeva/CryoSolver ",
+    download_url="https://github.com/SSavelyeva/CryoSolver/archive/v1.0.0.tar.gz",
     packages=setuptools.find_packages(exclude=['examples']),
     classifiers=[
         "Programming Language :: Python :: 3",
