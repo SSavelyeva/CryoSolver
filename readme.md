@@ -1,5 +1,5 @@
-# Cryosolver. Package for cryogenic cycle simulation in Python
-# README Ver.1.0.0
+# CryoSolver. Package for cryogenic cycle simulation in Python
+# Readme Ver. 1.0.0
 
 ## Introduction
 
@@ -9,11 +9,11 @@ Please note that the package is a by-product of the research activity and the au
 
 ## Licensing
 
-The _CryoSolver_ package is available under the 3-Clause BSD License (<https://opensource.org/licenses/BSD-3-Clause>) and can be used, copied, modified for free without permission on condition of an authorship acknowledgement:
+The _CryoSolver_ package is available under the [3-Clause BSD License](<https://opensource.org/licenses/BSD-3-Clause>) and can be used, copied, modified for free without permission on condition of an authorship acknowledgement:
 
 > Copyright 2020 Sofiya Savelyeva, Steffen Klöppel (KKT, TU Dresden)
 
-To cite the package, please reference to its documentation.
+To cite the package, please reference to its [documentation](CryoSolver_documentation_Ver.1.0.0.pdf). 
 
 ## Installation
 
@@ -29,34 +29,34 @@ The simulations can be made with and without installation of the package.
 
 ### Import from a path:
 
-The simulations can be made in an input file saved directly in the parent folder of the package ("...\textbackslash Cryosolver-1.0.0\textbackslash").
+The simulations can be made in an input file saved directly in the parent folder of the package (".../Cryosolver-1.0.0/").
 
 Alternatively, to import the package in a random directory, the package path needs to be once added into the system path list:
 
 ```
-	import sys
-	sys.path.append("Path/to/CryoSolver-1.0.0/") 
-```	
+import sys
+sys.path.append("Path/to/CryoSolver-1.0.0/") 
+```
 
 ### Global installation:
 
-Before the global installation please execute any example file from the "\textbackslash Cryosolver-1.0.0\textbackslash examples\textbackslash" folder and make sure that the program works properly. In case of errors with Refprop please refer to <https://www.nist.gov/srd/refprop> and modify the _refpropfunc.py_. In case of installation on OSX or Linux some changes in the Refprop setup can be required.
+Before the global installation please execute any example file from the "/Cryosolver-1.0.0/examples/" folder and make sure that the program works properly. In case of errors with Refprop please refer to <https://www.nist.gov/srd/refprop> and modify the _refpropfunc.py_. In case of installation on OSX or Linux some changes in the Refprop setup can be required.
 
 The installation can be made from the terminal using the package installer for Python ([pip](https://pip.pypa.io/en/stable/)): 
 
 ```
-	>pip install C:/.../CryoSolver-1.0.0
+>pip install C:/.../CryoSolver-1.0.0
 ```
 
 After that the package can be imported in any Python file with the command:
 
 ```
-	import cryosolver
+import cryosolver
 ```
 
 ## Simulation principle
 
-The simulation principle and detailed package content is described in the CryoSolver documentation file.
+The simulation principle and detailed package content is described in the [CryoSolver documentation file](CryoSolver_documentation_Ver.1.0.0.pdf).
 
 _CryoSolver_ consists of two main files: 
 
@@ -67,18 +67,18 @@ The _refpropfunc.py_ contains simplified functions to calculate the fluid proper
 
 Units of measure used in the program:
 
-		|Name | Designation in code | units |
-		|-|-|-|
-		|Temperature | T | K | 
-		|Pressure | P | bar (abs) |  
-		|Enthalpy | H | kJ/kg | 
-		|Entropy | S | kJ/(kg*K) | 
-		|Density | D | kg/m^3 |  
-		|Isobaric and isochoric heat capacity | Cp, Cv | kJ/(kg*K) |	
-		|Mass flow | m | kg/s |	
-		|Power | power | kW |  
-		|Heat load | capacity | kW |
-		|Isentropic efficiency | eta_is | \- |
+|Name | Designation in code | units |
+|-|-|-|
+|Temperature | T | K | 
+|Pressure | P | bar (abs) |  
+|Enthalpy | H | kJ/kg | 
+|Entropy | S | kJ/(kgK)| 
+|Density | D | kg/m^3 |  
+|Isobaric and isochoric heat capacity | Cp, Cv | kJ/(kgK) |	
+|Mass flow | m | kg/s |	
+|Power | power | kW |  
+|Heat load | capacity | kW |
+|Isentropic efficiency | eta_is | \- |
 
 The composition Z should be given on a **mole basis** by default.
 
@@ -96,7 +96,7 @@ The calculation is divided into the following main steps:
 	import cryosolver.solver as CS
 	```
 
-2. Reset of global variables. 
+2. Reset of global variables.
 
 	As global variable (_mainvar_ class object) is used by the solver, it needs to be created or reset before each new simulation to delete old values:
 
@@ -106,51 +106,53 @@ The calculation is divided into the following main steps:
 
 	If necessary, by means of this function it is possible to change a preferable zero state for the exergy calculation. By default the zero state is at 300 K and 1 bar.
 
-	```	
+	```
 	CS.start([303,1.013])
-	```	
-	
+	```
+
 	Furthermore, if a cycle with known mixture composition for all streams should be simulated, it is possible to put in here an array of compositions  to skip the calculation of composition balances (_x1_ and _x2_ - value of mole fractions of mixture components for each of 3 streams):
+
 
 	```
 	CS.start(fixcomposition=[[x1,x2],[x1,x2],[x1,x2]])
 	```
-	
+
+
 3. Fluid specification:
 
 	```
 	CS.setup.fluidsetup("Nitrogen.FLD", "Oxygen.FLD")
 	```
-	
-	Please refer to the _CryoSolver_ documentation file and notes in the program code.
-	
+
+	Please refer to the [_CryoSolver_ documentation file](CryoSolver_documentation_Ver.1.0.0.pdf) and notes in the program code.
+
 4. Assignement of cycle components by the user with class objects included into the package. 
 
 	Depending on given component specification the required balance functions are added by the solver into the list of equations (_cryosolver.solver.mainvar.funclist_).
-	
+
 	Thus, for example, if the turbine with 85% efficiency is assigned between the 1st and 2nd streams,
 
 	```
 	CS.Turbine(1,2,0.85)
 	```
-	
+
 	the following functions will be added to _cryosolver.solver.mainvar.funclist_:
 
-		- Energy balance: $$EnergyB()=h_{inlet}-h_{outlet}-\eta_s\cdot(h_{inlet}-h_{outlet} \big|_s)$$
-		
-		- Mass balance: $$MassB()=\dot{m}_{inlet}-\dot{m}_{outlet}$$
+	* Energy balance: <img src="https://render.githubusercontent.com/render/math?math=EnergyB()=h_{inlet}-h_{outlet}-\eta_s\cdot(h_{inlet}-h_{outlet} \big|_s)">
+
+	* Mass balance: <img src="https://render.githubusercontent.com/render/math?math=MassB()=\dot{m}_{inlet}-\dot{m}_{outlet}">
 
 	Here inlet and outlet indexes state for streams 1 and 2 respectively.
-	
+
 	In case if turbine power (here 700 kW) will be given:
-	
+
 	```
 	CS.Turbine(1,2,0.85,power=700)
 	```
-	
+
 	additional function will be added:
 
-		- Energy balance: $$PowerB()=h_{inlet}\cdot \dot{m}_{inlet} - h_{outlet}\cdot \dot{m}_{outlet} - power$$
+	* Energy balance: <img src="https://render.githubusercontent.com/render/math?math=PowerB()=h_{inlet}\cdot \dot{m}_{inlet} - h_{outlet}\cdot \dot{m}_{outlet} - power">
 
 5. Specification of fluid composition. 
 
@@ -159,16 +161,16 @@ The calculation is divided into the following main steps:
 	```
 	CS.setup.parameterset(1, "Z",[0.78,0.22]) 
 	```
-	
-6. Fixing the known parameters. 
-	
+
+	6. Fixing the known parameters.
+
 	The respective functions are added into the list. For example, to fix the temperature and pressure at the turbine outlet as 100 K, 1 bar, it should be written:
 
 	```
 	CS.setup.parameterset(2,"T",100)
 	CS.setup.parameterset(2,"P",1)
 	```
-	
+
 7. Additional functions can be added manually into the system. 
 
 	For example, fixing the temperature difference through the turbine as 100 K: 
@@ -178,26 +180,26 @@ The calculation is divided into the following main steps:
 		return CS.mainvar.streamlist[0].T - CS.mainvar.streamlist[1].T - 100	
 	CS.mainvar.funclist.append(userfunction)
 	```
-	
+
 	Please note, here the indexes are related to the internal solver array, so for the stream _i_ the index _i-1_ should be used (see rules below).	
-	
-8. Specification of an array of initial values. 
+
+8. Specification of an array of initial values.
 
 	It depends on specific problem, how close they should be to the solution. Usually, for a simple case, any physically meaningful values could be assigned. The array should mandatory have 3 list elements for temperature, pressure and mass flow and an array of mole compositions except the last component of the mixture:
 
 	```
 	CS.setup.initvaluesset( ([300,200], [5,1], [1,1],[[0.78],[0.78]])  )
 	```
-	
+
 	Here 0.78 is the initial mole fraction of nitrogen, the one of oxygen will be calculated as _(1 - 0.78)_.
-	
+
 	In case of a pure fluid or if the composition is fixed at the beginning, the initial values only for temperatures, pressures and mass flows need to be specified:
 
 	```
 	CS.setup.initvaluesset( ([300,200], [5,1], [1,1])  )
 	```
-	
-9. Finding the solution and result output. 
+
+9. Finding the solution and result output.
 
 	For definition of an optimization/case study functions please refer to example files.
 
@@ -205,7 +207,7 @@ The calculation is divided into the following main steps:
 	s = CS.solution("TP")
 	CS.txtoutput(s)
 	```
-	
+
 	It is possible to perform a simulation on temperature/pressure ("TP") or on temperature/entropy ("TS") based calculation. The second one is more stable for ideal gases and 2-phase region simulations. However, the initial values should be anyway setup as temperature/pressure based and will be automatically recalculated into the entropy. Please note, that manual printing of the solution in case of "TS" simulation will return the entropy values in the middle. In the _CS.textoutput()_ function they are already transformed back to show pressures.
 
 	
@@ -241,9 +243,12 @@ Success: True
 
 By the specified open streams all the inlets and outlets of the cycle are shown regardless of whether they belong to a closed loop. This output allows to find possible errors in stream index definitions.
 
-#### Important simulation rules
 
-##### Rule to define a closed cycle
+### Important simulation rules
+
+
+#### Rule to define a closed cycle
+
 
 As well as in most of industrial simulation software, it is not possible to directly setup a fully closed cycle. This would cause an over-definition of the equation system due to looping of the mass flow and composition balance from one stream to another. Thus, the cycle should be defined with at least **one opening** and two **closing equation of pressure and temperature balance**.
 
@@ -255,7 +260,8 @@ CS.setup.closeloop(1,6)
 	
 The temperature balance is not included, so temperatures can be specified at both ends if required.
 
-##### Stream index definition
+
+#### Stream index definition
 
 The streams need to be **numbered starting with 1** and not to have breaks in between. This is important for the solver to find the total number of variables.
 
@@ -263,15 +269,15 @@ However, the solver shifts these indexes to start the assignment of internal arr
 
 Example: to set the temperature of the first cycle stream as 300 K using the module function:
 
-	```
-	CS.setup.parameterset(1,"T",300)
-	```
+```
+CS.setup.parameterset(1,"T",300)
+```
 
 To print the temperature of the first stream from the _streamlist_ array:
 
-	```
-	print(CS.mainvar.streamlist[0].T)
-	```
+```
+print(CS.mainvar.streamlist[0].T)
+```
 	
 ## Solution failures
 
@@ -290,7 +296,7 @@ Additionally, there can be failures in the calculation due to insufficient accur
 
 ## Examples
 
-The explanation of example files is given in the [CryoSolver documentation file]().
+The explanation of example files is given in the [CryoSolver documentation file](CryoSolver_documentation_Ver.1.0.0.pdf).
 
 ## Acknowledgement
 
@@ -299,4 +305,5 @@ This package was developed at the TU Dresden within the Work Package 4 of the EA
 ## References
 
 [1]: Lemmon, E.W., Bell, I.H., Huber, M.L., McLinden, M.O. NIST Standard Reference Database 23: Reference Fluid Thermodynamic and Transport Properties-REFPROP, Version 10.0, National Institute of Standards and Technology, Standard Reference Data Program, Gaithersburg, 2018. <http://dx.doi.org/10.18434/T4JS3C>
+
 [2]: Savelyeva, S., Kloeppel, S, Haberstroh, Ch. CryoSolver. Package for cryogenic cycle simulation in Python. Documentation Ver. 1.0.0. Dresden, 2018. 
