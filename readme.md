@@ -17,7 +17,7 @@ To cite the package, please reference to its [documentation](CryoSolver_document
 
 ## Installation
 
-The package has been developed for _Python 3.6.4_ (or higher) and the [_Refprop 10.0_](https://www.nist.gov/srd/refprop) 
+The package has been developed for _Python 3.6.4_ (or higher) and the [_Refprop 10.0_](https://www.nist.gov/srd/refprop). 
 
 Note: It is possible to use CoolProp library instead of Refprop. The _refpropfunc.py_ needs to be respectively modified by the user. 
 
