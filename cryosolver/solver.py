@@ -494,7 +494,7 @@ class Heat_exchanger:
         return f 
     def NTUB(self):
         return TC_NTU(mainvar.streamlist[self.cells[self.cell1_for_NTU].inlet].T,mainvar.streamlist[self.cells[self.cell1_for_NTU].outlet].T,mainvar.streamlist[self.cells[self.cell2_for_NTU].inlet].T,mainvar.streamlist[self.cells[self.cell2_for_NTU].outlet].T,self.NTU) - mainvar.streamlist[self.cells[self.cell2_for_NTU].outlet].T      
-    def HXdef(self, Para='mindT', Pval=None, savedata=False, plot=False):
+    def HXdef(self, Para = 'mindT', Pval = None, savedata = False, plot = False, Resolution = 100, filename = "Hxcurve.txt", dhaccuracy = 1e-4):
         """
         Function to determine either the pinch point or an integral number of transfer units (NTU) of a multistream heat exchnager and its difference from a desired value (Pval).
         Additionally a Q-T diagram can be printed.
@@ -502,7 +502,14 @@ class Heat_exchanger:
         def HXplot(hxcurves):
             """
             Function to plot Q-T diagram
-                hxcurves - total matrix of entalpies and temperature of cold and warm streams
+                hxcurves - total matrix of entalpies and temperature of cold and warm streams;
+                Para - target parameter: 'NTU' - for detailed NTU calculation; 'mindT' - for pinch points calculation;
+                Pval - desired value of target parameter;
+                savedata - flag showing whether a .txt file with temperatures and enthalpies is saved after calculation;
+                plot - flag showing whether the Q-T diagram should be plotted;
+                Resolution - number of elements in the temperature array during calculations;
+                filename - name of saving .txt file;
+                dhaccuracy - permissible error in the heat exchanger enthalpy calculation
             """
             import matplotlib.pyplot as plt
             y1 = hxcurves[:,1]
@@ -520,11 +527,9 @@ class Heat_exchanger:
         coldcells = []                                                          # List of all cold cells
         tempw = []                                                              # List of temperatures of warm side
         tempc = []                                                              # List of temperatures of cold side
-        duty=0
         for i in range(self.number_of_cells):                                   # Identify warm and cold cells
             if mainvar.streamlist[self.cells[i].inlet].T < mainvar.streamlist[self.cells[i].outlet].T:
                 coldcells.append(i)
-                duty += mainvar.streamlist[self.cells[i].inlet].h * mainvar.streamlist[self.cells[i].inlet].m - mainvar.streamlist[self.cells[i].outlet].h * mainvar.streamlist[self.cells[i].outlet].m
                 tempc.append(mainvar.streamlist[self.cells[i].inlet].T)
                 tempc.append(mainvar.streamlist[self.cells[i].outlet].T)
             else:
@@ -532,31 +537,45 @@ class Heat_exchanger:
                 tempw.append(mainvar.streamlist[self.cells[i].inlet].T)
                 tempw.append(mainvar.streamlist[self.cells[i].outlet].T)
         #Fill the list of temperatures with intermediate temperatures
-        tempc = np.unique(np.append(np.linspace(np.min(tempc), np.max(tempc), num=100), tempc))
-        tempw = np.unique(np.append(np.linspace(np.min(tempw), np.max(tempc), num=100), tempw))
+        tempc = np.unique(np.append(np.linspace(np.min(tempc), np.max(tempc), num=Resolution), tempc))
+        tempw = np.unique(np.append(np.linspace(np.min(tempw), np.max(tempc), num=Resolution), tempw))
         hcsteps = np.zeros_like(tempc)                                          # List of enthalpies in the cold streams
         hwsteps = np.zeros_like(tempw)                                          # List of enthalpies in the warm streams
         for j in coldcells:                                                     # For each temperature step in the cold cells: sum up the enthalpy changes per temperature step
             z = mainvar.streamlist[self.cells[j].inlet].z
             hinlet = mainvar.streamlist[self.cells[j].inlet].h
             houtlet = mainvar.streamlist[self.cells[j].outlet].h
+            Tinlet = mainvar.streamlist[self.cells[j].inlet].T
+            Toutlet = mainvar.streamlist[self.cells[j].outlet].T
+            pinlet = mainvar.streamlist[self.cells[j].inlet].p
+            poutlet = mainvar.streamlist[self.cells[j].outlet].p
             massflow = mainvar.streamlist[self.cells[j].inlet].m
+            slope = (pinlet - poutlet) / (Tinlet - Toutlet)                     # A simple linear distribuition of pressure over temperature is assumed
+            offset = pinlet - slope * Tinlet
             for i in range(len(tempc)):
                 if tempc[i] > mainvar.streamlist[self.cells[j].inlet].T and tempc[i] < mainvar.streamlist[self.cells[j].outlet].T:
-                    hcsteps[i] += (RF.H_TP(z, tempc[i], mainvar.streamlist[self.cells[j].inlet].p) - hinlet)*massflow
+                    pstep = slope * tempc[i] + offset
+                    hcsteps[i] += (RF.H_TP(z, tempc[i], pstep) - hinlet) * massflow
                 elif tempc[i] >= mainvar.streamlist[self.cells[j].outlet].T:
                     hcsteps[i] += (houtlet-hinlet) * massflow
         for j in warmcells:                                                     # For each temperature step in the warm cells: sum up the enthalpy changes per temperature step
             z = mainvar.streamlist[self.cells[j].inlet].z
             hinlet = mainvar.streamlist[self.cells[j].inlet].h
             houtlet = mainvar.streamlist[self.cells[j].outlet].h
+            Tinlet = mainvar.streamlist[self.cells[j].inlet].T
+            Toutlet = mainvar.streamlist[self.cells[j].outlet].T
+            pinlet = mainvar.streamlist[self.cells[j].inlet].p
+            poutlet = mainvar.streamlist[self.cells[j].outlet].p
             massflow = mainvar.streamlist[self.cells[j].inlet].m
+            slope = (poutlet - pinlet) / (Tinlet - Toutlet)                     # A simple linear distribuition of pressure over temperature is assumed
+            offset = pinlet - slope * Tinlet
             for i in range(len(tempw)):
                 if tempw[i] > mainvar.streamlist[self.cells[j].outlet].T and tempw[i] < mainvar.streamlist[self.cells[j].inlet].T:
-                    hwsteps[i] += (RF.H_TP(z, tempw[i], mainvar.streamlist[self.cells[j].inlet].p) - houtlet) * massflow
+                    pstep = slope * tempw[i] + offset
+                    hwsteps[i] += (RF.H_TP(z, tempw[i], pstep) - houtlet) * massflow
                 elif tempw[i] >= mainvar.streamlist[self.cells[j].inlet].T:
                       hwsteps[i] +=-(houtlet-hinlet) * massflow
-        if abs(max(hwsteps) - max(hcsteps)) > 1e-4:
+        if abs(max(hwsteps) - max(hcsteps)) > dhaccuracy:
             print('Enthalpies do not match, difference:', max(hwsteps) - max(hcsteps))
         enthalpies = np.concatenate((hwsteps, hcsteps))
         enthalpies = np.unique(np.sort(enthalpies))
@@ -573,7 +592,7 @@ class Heat_exchanger:
         tcoldcomp = np.interp(enthalpies, hcsteps, tempc)
         hxcurves = np.column_stack((enthalpies, tcoldcomp, twarmcomp))
         if savedata == True:
-            np.savetxt('hxcurve.txt', hxcurves)
+            np.savetxt(filename, hxcurves)
         if plot == True:
             HXplot(hxcurves)
         if Para=='NTU':
