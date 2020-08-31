@@ -605,9 +605,9 @@ class Heat_exchanger:
                     raise
             value = sum(NTUs)
             if Pval is not None:
-                res = value - Pval
+                res = Pval - value
             else:
-                res=None
+                res = None
         else: # Para=='mindT':
             dt1 = np.array(twarmcomp - tcoldcomp)
             value = np.amin(dt1)
