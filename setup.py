@@ -29,6 +29,9 @@ setuptools.setup(
         "Operating System :: Windows",
         "Topic :: Scientific/Engineering"
     ],
+    install_requires=[
+    'ctREFPROP'
+    ],
     python_requires='>=3.6',
     zip_safe=True,
 	license='BSD-3-Clause',
