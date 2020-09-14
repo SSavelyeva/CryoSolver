@@ -34,7 +34,7 @@ The internal Refprop subroutine is not used to avoid deviations during the mixtu
 """
 import os
 from ctREFPROP.ctREFPROP import REFPROPFunctionLibrary
-RP = REFPROPFunctionLibrary(os.environ['RPPREFIX'])
+RP = REFPROPFunctionLibrary(os.environ['RPPREFIX']+'\REFPROP.DLL')
 RP.SETPATHdll(os.environ['RPPREFIX'])
 
 
